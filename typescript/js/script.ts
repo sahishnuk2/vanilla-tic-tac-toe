@@ -33,6 +33,8 @@ function init() {
     view.render(store.game, store.stats);
   };
 
+  view.render(store.game, store.stats);
+
   view.bindGameResetEvent((event) => {
     store.reset();
     //view.render(store.game, store.stats);

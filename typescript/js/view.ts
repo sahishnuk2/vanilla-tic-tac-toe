@@ -1,8 +1,11 @@
+import type { Player, Moves } from "./types";
+import type Store from "./store.js";
+
 export default class View {
   // Elements
-  $ = {};
+  $: Record<string, Element> = {};
   // List of elements
-  $$ = {};
+  $$: Record<string, NodeListOf<Element>> = {};
 
   constructor() {
     this.$.menu = this.#qs('[data-id="menu"]');
@@ -27,23 +30,20 @@ export default class View {
     });
   }
 
-  bindGameResetEvent(handler) {
+  bindGameResetEvent(handler: (e: Event) => void) {
     this.$.resetBtn.addEventListener("click", handler);
     this.$.modalBtn.addEventListener("click", handler);
   }
 
-  bindNewRoundEvent(handler) {
+  bindNewRoundEvent(handler: (e: Event) => void) {
     this.$.newRoundBtn.addEventListener("click", handler);
   }
 
-  bindPlayerMoveEvent(handler) {
+  bindPlayerMoveEvent(handler: (sq: Element) => void) {
     this.#delegate(this.$.grid, '[data-id="square"]', "click", handler);
-    // this.$$.squares.forEach(square => {
-    //     square.addEventListener("click", () => handler(square));
-    // });
   }
 
-  render(game, stats) {
+  render(game: Store["game"], stats: Store["stats"]) {
     const { playerWithStats, ties } = stats;
     const {
       currentPlayer,
@@ -73,25 +73,26 @@ export default class View {
     this.$.menuItems.classList.toggle("hidden");
     this.$.menu.classList.toggle("border");
 
-    const icon = this.$.menuBtn.querySelector("i");
+    const icon = this.#qs("i", this.$.menuBtn);
+
     icon.classList.toggle("fa-chevron-down");
     icon.classList.toggle("fa-chevron-up");
   }
 
-  #setTurnIndicator(player) {
+  #setTurnIndicator(player: Player) {
     const icon = document.createElement("i");
     const label = document.createElement("p");
 
     icon.classList.add("fa-solid", player.iconClass, player.colorClass);
     label.classList.add(player.colorClass);
-    label.innerText = `${player.name}, you're up!`;
+    label.textContent = `${player.name}, you're up!`;
 
     this.$.turn.replaceChildren(icon, label);
   }
 
-  #openModal(message) {
+  #openModal(message: string) {
     this.$.modal.classList.remove("hidden");
-    this.$.modalText.innerText = message;
+    this.$.modalText.textContent = message;
   }
 
   #closeAll() {
@@ -107,7 +108,8 @@ export default class View {
     this.$.menuItems.classList.add("hidden");
     this.$.menu.classList.remove("border");
 
-    const icon = this.$.menuBtn.querySelector("i");
+    const icon = this.#qs("i", this.$.menuBtn);
+
     icon.classList.add("fa-chevron-down");
     icon.classList.remove("fa-chevron-up");
   }
@@ -118,7 +120,7 @@ export default class View {
     });
   }
 
-  #initialiseMoves(moves) {
+  #initialiseMoves(moves: Moves[]) {
     this.$$.squares.forEach((square) => {
       const existingMove = moves.find((move) => move.squareId === +square.id);
       if (existingMove) {
@@ -127,7 +129,7 @@ export default class View {
     });
   }
 
-  #handlePlayerMove(squareEl, player) {
+  #handlePlayerMove(squareEl: Element, player: Player) {
     const icon = document.createElement("i");
 
     icon.classList.add("fa-solid", player.iconClass, player.colorClass);
@@ -135,13 +137,13 @@ export default class View {
     squareEl.replaceChildren(icon);
   }
 
-  #updateScoreboard(p1wins, p2wins, ties) {
-    this.$.p1wins.innerText = `${p1wins} wins`;
-    this.$.p2wins.innerText = `${p2wins} wins`;
-    this.$.ties.innerText = `${ties}`;
+  #updateScoreboard(p1wins: number, p2wins: number, ties: number) {
+    this.$.p1wins.textContent = `${p1wins} wins`;
+    this.$.p2wins.textContent = `${p2wins} wins`;
+    this.$.ties.textContent = `${ties}`;
   }
 
-  #qs(selector, parent) {
+  #qs(selector: string, parent?: Element) {
     const el = parent
       ? parent.querySelector(selector)
       : document.querySelector(selector);
@@ -150,15 +152,24 @@ export default class View {
     return el;
   }
 
-  #qsAll(selector) {
+  #qsAll(selector: string) {
     const elList = document.querySelectorAll(selector);
 
     if (!elList) throw new Error("Could not find elements");
     return elList;
   }
 
-  #delegate(el, selector, eventKey, handler) {
+  #delegate(
+    el: Element,
+    selector: string,
+    eventKey: string,
+    handler: (el: Element) => void
+  ) {
     el.addEventListener(eventKey, (event) => {
+      if (!event.target || !(event.target instanceof Element)) {
+        throw new Error("Event target not found");
+      }
+
       if (event.target.matches(selector)) {
         handler(event.target);
       }

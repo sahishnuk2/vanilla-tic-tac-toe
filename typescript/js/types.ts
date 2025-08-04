@@ -5,7 +5,7 @@ export type Player = {
   colorClass: string;
 };
 
-export type Moves = {
+export type Move = {
   squareId: number;
   player: Player;
 };
@@ -16,12 +16,12 @@ export type GameStatus = {
 };
 
 export type Game = {
-  moves: Moves[];
+  moves: Move[];
   status: GameStatus;
 };
 
 export type GameState = {
-  currentGameMoves: Moves[];
+  currentGameMoves: Move[];
   history: {
     currentRoundGames: Game[];
     allGames: Game[];

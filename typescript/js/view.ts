@@ -1,5 +1,5 @@
-import type { Player, Moves } from "./types";
-import type Store from "./store.js";
+import type { Player, Move } from "./types";
+import { DerivedGame, DerivedStats } from "./store.js";
 
 export default class View {
   // Elements
@@ -43,7 +43,7 @@ export default class View {
     this.#delegate(this.$.grid, '[data-id="square"]', "click", handler);
   }
 
-  render(game: Store["game"], stats: Store["stats"]) {
+  render(game: DerivedGame, stats: DerivedStats) {
     const { playerWithStats, ties } = stats;
     const {
       currentPlayer,
@@ -120,7 +120,7 @@ export default class View {
     });
   }
 
-  #initialiseMoves(moves: Moves[]) {
+  #initialiseMoves(moves: Move[]) {
     this.$$.squares.forEach((square) => {
       const existingMove = moves.find((move) => move.squareId === +square.id);
       if (existingMove) {

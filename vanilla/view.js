@@ -73,7 +73,8 @@ export default class View {
     this.$.menuItems.classList.toggle("hidden");
     this.$.menu.classList.toggle("border");
 
-    const icon = this.$.menuBtn.querySelector("i");
+    const icon = this.#qs("i", this.$.menuBtn);
+
     icon.classList.toggle("fa-chevron-down");
     icon.classList.toggle("fa-chevron-up");
   }
@@ -107,7 +108,7 @@ export default class View {
     this.$.menuItems.classList.add("hidden");
     this.$.menu.classList.remove("border");
 
-    const icon = this.$.menuBtn.querySelector("i");
+    const icon = this.#qs("i", this.$.menuBtn);
     icon.classList.add("fa-chevron-down");
     icon.classList.remove("fa-chevron-up");
   }

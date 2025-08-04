@@ -1,7 +1,10 @@
 import "./App.css";
 import Footer from "./components/Footer";
+import Menu from "./components/Menu";
+import Modal from "./components/Modal";
 
 export default function App() {
+  const showModal = false;
   return (
     <>
       <main>
@@ -10,18 +13,7 @@ export default function App() {
             <i className="fa-solid fa-x yellow"></i>
             <p className="yellow">Player 1, you're up!</p>
           </div>
-          <div className="menu" data-id="menu">
-            <button className="menu-btn" data-id="menu-btn">
-              Actions
-              <i className="fa-solid fa-chevron-down"></i>
-            </button>
-
-            <div className="items border hidden" data-id="menu-items">
-              <button data-id="reset-btn">Reset</button>
-              <button data-id="new-round-btn">New Round</button>
-            </div>
-          </div>
-
+          <Menu onAction={(action) => console.log(action)} />
           {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((squareId) => {
             return (
               <div key={squareId} className="square shadow" data-id="square">
@@ -55,13 +47,7 @@ export default function App() {
       </main>
 
       <Footer />
-
-      <div className="modal hidden" data-id="modal">
-        <div className="modal-contents">
-          <p data-id="modal-text">Player 1 wins!</p>
-          <button data-id="modal-btn">Play Again</button>
-        </div>
-      </div>
+      {showModal && <Modal message="Player 1 Wins" />}
       <script src="./dist/script.js" type="module"></script>
     </>
   );

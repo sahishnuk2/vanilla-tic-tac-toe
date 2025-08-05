@@ -7,7 +7,7 @@ type Props = {
 };
 
 export default function Menu({ onAction }: Props) {
-  const [menuOpen, setMenuOpen] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="menu">
@@ -28,8 +28,22 @@ export default function Menu({ onAction }: Props) {
 
       {menuOpen && (
         <div className="items border">
-          <button onClick={() => onAction("reset")}>Reset</button>
-          <button onClick={() => onAction("new-round")}>New Round</button>
+          <button
+            onClick={() => {
+              onAction("reset");
+              setMenuOpen(false);
+            }}
+          >
+            Reset
+          </button>
+          <button
+            onClick={() => {
+              onAction("new-round");
+              setMenuOpen(false);
+            }}
+          >
+            New Round
+          </button>
         </div>
       )}
     </div>
